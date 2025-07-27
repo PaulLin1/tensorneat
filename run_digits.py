@@ -37,7 +37,7 @@ pipeline = Pipeline(
     ),
     problem=problem,
     generation_limit=500,
-    fitness_target=-1e-4,
+    fitness_target=.9,
     seed=42,
 )
 
