@@ -1,5 +1,7 @@
 import sys
 import os
+from problems.mnist_problem import MNISTClassificationProblem  # ← your custom problem file
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from tensorneat.pipeline import Pipeline
@@ -7,7 +9,6 @@ from tensorneat.algorithm.neat import NEAT
 from tensorneat.genome import DefaultGenome, BiasNode
 from tensorneat.common import ACT, AGG
 
-from mnist_problem import MNISTClassificationProblem  # ← your custom problem file
 
 import jax.numpy as jnp
 

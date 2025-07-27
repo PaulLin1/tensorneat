@@ -1,11 +1,10 @@
 import sys
 import os
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT  # <- add this
-from digits_problem import DigitsClassificationProblem
-
 
 import jax.numpy as jnp
 
@@ -14,6 +13,7 @@ from tensorneat.algorithm.neat import NEAT
 from tensorneat.genome import DefaultGenome, BiasNode
 from tensorneat.problem.func_fit import CustomFuncFit
 from tensorneat.common import ACT, AGG
+from problems.digits_problem import DigitsClassificationProblem
 
 problem = DigitsClassificationProblem()
 
