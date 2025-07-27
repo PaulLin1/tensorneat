@@ -40,7 +40,7 @@ pipeline = Pipeline(
             survival_threshold=0.2,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
-                num_outputs=1,
+                num_outputs=2,
                 init_hidden_layers=(),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
