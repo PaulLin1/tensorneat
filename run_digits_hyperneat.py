@@ -20,8 +20,8 @@ problem = DigitsClassificationProblem()
 
 from tensorneat.algorithm.hyperneat import FullSubstrate
 
-input_coors = [(x / 3.5 - 1.0, y / 3.5 - 1.0) for y in range(8) for x in range(8)]  # 64
-input_coors.append((0.0, -1.2))  # Bias
+input_coors = [(x, y) for y in range(8) for x in range(8)]
+input_coors.append((0.0, -9))  # Bias
 
 
 hidden_coors = [
