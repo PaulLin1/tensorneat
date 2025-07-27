@@ -21,20 +21,12 @@ problem = DigitsClassificationProblem()
 from tensorneat.algorithm.hyperneat import FullSubstrate
 
 # input coords: 8x8 grid normalized [0,1]
-input_coors = [
-    (x / 7.0, y / 7.0)
-    for y in range(8)
-    for x in range(8)
-]
+input_coors = [(x / 3.5 - 1.0, y / 3.5 - 1.0) for y in range(8) for x in range(8)]  # 64
+input_coors.append((0.0, -1.2))  # Bias
 
-# bias unit: place at middle bottom (x=0.5, y=0) or wherever you prefer within [0,1]
-input_coors.append((0.5, 0.0))  # bias unit
+hidden_coors = [((x / 2.0 - 1.0), 0.0) for x in range(5)]  # 5 hidden
+output_coors = [(x / 5.0 - 0.9, 1.0) for x in range(10)]  # 10 output classes
 
-# hidden coords: 5 points on x axis normalized [0,1], y=0
-hidden_coors = [(x / 4.0, 0.0) for x in range(5)]
-
-# output coords: 10 points on x axis normalized [0,1], y=1
-output_coors = [(x / 9.0, 1.0) for x in range(10)]
 
 
 substrate = FullSubstrate(
@@ -47,9 +39,9 @@ pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
         neat=NEAT(
-            pop_size=500,
+            pop_size=750,
             species_size=20,
-            survival_threshold=0.01,
+            survival_threshold=0.2,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
