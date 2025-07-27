@@ -24,21 +24,25 @@ input_coors = [(x / 3.5 - 1.0, y / 3.5 - 1.0) for y in range(8) for x in range(8
 input_coors.append((0.0, -1.2))  # Bias
 
 
-hidden_coors = [((x / 2.0 - 1.0), 0.0) for x in range(5)]  # 5 hidden
+hidden_coors = [
+    ((x / 5.0 - 1.0), -0.4) for x in range(10)
+] + [
+    ((x / 5.0 - 1.0), 0.0) for x in range(10)
+]
 output_coors = [(x / 5.0 - 0.9, 1.0) for x in range(10)]  # 10 output classes
 
 
 
 substrate = FullSubstrate(
     input_coors=input_coors,
-    # hidden_coors=hidden_coors,
+    hidden_coors=hidden_coors,
     output_coors=output_coors,
 )
 
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        weight_threshold=0.5,
+        weight_threshold=0.005,
         neat=NEAT(
             pop_size=500,
             species_size=20,
