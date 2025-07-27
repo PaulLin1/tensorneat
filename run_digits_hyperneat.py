@@ -45,8 +45,11 @@ pipeline = Pipeline(
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
-                init_hidden_layers=(),
-                output_transform=ACT.tanh,
+                # init_hidden_layers=(),
+                init_hidden_layers=(5,),  # add hidden layer
+                activation_set=['sigmoid', 'tanh', 'gauss', 'sin'], 
+
+                # output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
