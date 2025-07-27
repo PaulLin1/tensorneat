@@ -13,21 +13,27 @@ from tensorneat.algorithm.neat import NEAT
 from tensorneat.genome import DefaultGenome, BiasNode
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
 from tensorneat.common import ACT, AGG
-from problems.digits_problem import DigitsClassificationProblem
-problem = DigitsClassificationProblem()
+from problems.mnist_problem import MNISTClassificationProblem
+
+problem = MNISTClassificationProblem()
 
 
 from tensorneat.algorithm.hyperneat import FullSubstrate
 
+# 28x28 input coordinates normalized to [-1, 1]
 input_coors = [
-    (x / 3.5 - 1.0, y / 3.5 - 1.0)
-    for y in range(8)
-    for x in range(8)
+    (x / 13.5 - 1.0, y / 13.5 - 1.0)
+    for y in range(28)
+    for x in range(28)
 ]
-input_coors.append((0.0, -1.2))  # Bias unit
 
-hidden_coors = [((x / 2.0 - 1.0), 0.0) for x in range(5)]
+# Add bias unit below the grid
+input_coors.append((0.0, -1.2))
 
+# Optional: wider hidden layer
+hidden_coors = [((x / 4.0 - 1.0), 0.0) for x in range(9)]  # 9 nodes
+
+# Output layer for 10 classes
 output_coors = [((x / 4.5 - 1.0), 1.0) for x in range(10)]
 
 substrate = FullSubstrate(
@@ -35,8 +41,6 @@ substrate = FullSubstrate(
     hidden_coors=hidden_coors,
     output_coors=output_coors,
 )
-
-
 
 pipeline = Pipeline(
     algorithm=HyperNEAT(
