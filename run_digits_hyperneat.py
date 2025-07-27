@@ -50,7 +50,7 @@ pipeline = Pipeline(
         output_transform=ACT.sigmoid,
     ),
     problem=problem,
-    generation_limit=5000,  # more generations for better results
+    generation_limit=1000,  # more generations for better results
     fitness_target=0.9,   # set reasonable target to encourage progress
     seed=42,
 )
