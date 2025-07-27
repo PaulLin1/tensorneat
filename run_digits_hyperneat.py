@@ -35,12 +35,12 @@ pipeline = Pipeline(
         substrate=substrate,
         weight_threshold=0.1,  # increase to prune weak links
         neat=NEAT(
-            pop_size=300,          # smaller but still decent population
+            pop_size=2000,          # smaller but still decent population
             species_size=50,       # more balanced speciation
             survival_threshold=0.2,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
-                num_outputs=2,
+                num_outputs=1,
                 init_hidden_layers=(),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
@@ -50,7 +50,7 @@ pipeline = Pipeline(
         output_transform=ACT.sigmoid,
     ),
     problem=problem,
-    generation_limit=500,  # more generations for better results
+    generation_limit=5000,  # more generations for better results
     fitness_target=0.9,   # set reasonable target to encourage progress
     seed=42,
 )
