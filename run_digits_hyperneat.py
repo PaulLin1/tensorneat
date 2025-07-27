@@ -31,7 +31,7 @@ output_coors = [(x / 5.0 - 0.9, 1.0) for x in range(10)]  # 10 output classes
 
 substrate = FullSubstrate(
     input_coors=input_coors,
-    hidden_coors=hidden_coors,
+    # hidden_coors=hidden_coors,
     output_coors=output_coors,
 )
 
