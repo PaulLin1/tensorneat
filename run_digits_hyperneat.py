@@ -1,47 +1,43 @@
 import sys
 import os
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
+from tensorneat.pipeline import Pipeline
+from tensorneat.algorithm.neat.neat import NEAT
+
 import jax.numpy as jnp
-import jax.nn as jnn
+
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat import NEAT
+from tensorneat.genome import DefaultGenome, BiasNode
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
-from tensorneat.genome import DefaultGenome
-from tensorneat.common import ACT
+from tensorneat.common import ACT, AGG
 from problems.digits_problem import DigitsClassificationProblem
-# 64 inputs from 8x8 grid
+problem = DigitsClassificationProblem()
+
+
+from tensorneat.algorithm.hyperneat import FullSubstrate
+
 input_coors = [
-    (x / 3.5 - 1.0, y / 3.5 - 1.0) 
-    for y in range(8) 
+    (x / 3.5 - 1.0, y / 3.5 - 1.0)
+    for y in range(8)
     for x in range(8)
 ]
-# Add bias coordinate — usually outside normal range, e.g., just below input layer
-bias_coor = [(0.0, -1.5)]
-input_coors += bias_coor  # now 65 inputs total
-# 10 outputs in a line across the top
-output_coors = [
-    ((i / 4.5 - 1.0), 1.0)
-    for i in range(10)
-]
+input_coors.append((0.0, -1.2))  # Bias unit
 
-# Optional hidden layer (example: 5x2 grid)
-hidden_coors = [
-    ((x / 2.0 - 1.0), 0.0)
-    for x in range(5)
-    for y in range(1)
-]
+hidden_coors = [((x / 2.0 - 1.0), 0.0) for x in range(5)]
+
+output_coors = [((x / 4.5 - 1.0), 1.0) for x in range(10)]
 
 substrate = FullSubstrate(
     input_coors=input_coors,
-#    hidden_coors=hidden_coors,
+    hidden_coors=hidden_coors,
     output_coors=output_coors,
 )
 
-problem = DigitsClassificationProblem()
 
-# the num of input_coors is 5
-# 4 is for cartpole inputs, 1 is for bias
+
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
@@ -52,24 +48,47 @@ pipeline = Pipeline(
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
-                max_nodes=1000,
-                max_conns=1000,
                 init_hidden_layers=(),
                 output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=ACT.identity
-        # output_transform = jnn.softmax
+        output_transform=jnp.argmax,
     ),
     problem=problem,
-    generation_limit=300,
+    generation_limit=500,
+    fitness_target=.8,
+    seed=42,
+)
+
+pipeline = Pipeline(
+    algorithm=NEAT(
+        pop_size=500,
+        species_size=20,
+        survival_threshold=0.01,
+        genome=DefaultGenome(
+            num_inputs=64,
+            num_outputs=10,
+            init_hidden_layers=(),
+            node_gene=BiasNode(
+                activation_options=[ACT.identity, ACT.inv],
+                aggregation_options=[AGG.sum, AGG.product],
+            ),
+            max_nodes=2000,
+            max_conns=5000,
+            output_transform=ACT.identity,
+        ),
+    ),
+    problem=problem,
+    generation_limit=500,
     fitness_target=.9,
+    seed=42,
 )
 
 # initialize state
 state = pipeline.setup()
-# print(state)
 # run until terminate
 state, best = pipeline.auto_run(state)
+# show result
+pipeline.show(state, best)
