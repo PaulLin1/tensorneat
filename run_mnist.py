@@ -27,7 +27,7 @@ pipeline = Pipeline(
                 activation_options=[ACT.identity, ACT.inv],
                 aggregation_options=[AGG.sum, AGG.product],
             ),
-            max_nodes=5000,
+            max_nodes=2000,
             max_conns=10000,
             output_transform=ACT.identity,
         ),

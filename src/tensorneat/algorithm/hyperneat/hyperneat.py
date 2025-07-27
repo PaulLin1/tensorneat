@@ -33,7 +33,7 @@ class HyperNEAT(BaseAlgorithm):
             num_inputs=substrate.num_inputs,
             num_outputs=substrate.num_outputs,
             max_nodes=substrate.nodes_cnt,
-            max_conns=substrate.conns_cnt,
+            max_conns=650,
             node_gene=HyperNEATNode(aggregation, activation),
             conn_gene=HyperNEATConn(),
             activate_time=activate_time,
