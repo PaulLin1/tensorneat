@@ -7,8 +7,9 @@ from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
 from tensorneat.genome import DefaultGenome
-from tensorneat.common import ACT
+from tensorneat.common import ACT, AGG
 from problems.digits_problem import DigitsClassificationProblem
+from tensorneat.genome import DefaultGenome, BiasNode
 
 problem = DigitsClassificationProblem()
 
@@ -18,7 +19,7 @@ input_coors.append((0.0, -1.2))  # Bias for input layer
 
 # Hidden coords normalized over [-1, 1], same scale as input
 hidden_coors = [(x / 9 * 2 - 1, -0.4) for x in range(10)]
-hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
+# hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
 
 # Output coords normalized over [-1, 1]
 output_coors = [(x / 9 * 2 - 1, 0.0) for x in range(10)]
@@ -36,18 +37,23 @@ pipeline = Pipeline(
         weight_threshold=0.1,  # increase to prune weak links
         neat=NEAT(
             pop_size=2000,          # smaller but still decent population
-            species_size=50,       # more balanced speciation
-            survival_threshold=0.2,  # keep top 20% survive to maintain diversity
+            species_size=20,       # more balanced speciation
+            survival_threshold=0.01,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
                 num_outputs=1,
+                node_gene=BiasNode(
+                    activation_options=[ACT.identity, ACT.inv],
+                    aggregation_options=[AGG.sum, AGG.product],
+                ),
+
                 init_hidden_layers=(),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=ACT.sigmoid,
+        output_transform=ACT.softmax,
     ),
     problem=problem,
     generation_limit=1000,  # more generations for better results
