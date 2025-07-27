@@ -5,32 +5,24 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT
-
-import jax.numpy as jnp
-import jax.nn as jnn
-
-from tensorneat.pipeline import Pipeline
-from tensorneat.algorithm.neat import NEAT
-from tensorneat.genome import DefaultGenome, BiasNode
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
-from tensorneat.common import ACT, AGG
+from tensorneat.genome import DefaultGenome
+from tensorneat.common import ACT
 from problems.digits_problem import DigitsClassificationProblem
+
 problem = DigitsClassificationProblem()
 
+# Normalize input coordinates consistently over [-1,1]
+input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8)]
+input_coors.append((0.0, -1.2))  # Bias for input layer
 
-from tensorneat.algorithm.hyperneat import FullSubstrate
+# Hidden coords normalized over [-1, 1], same scale as input
+hidden_coors = [(x / 9 * 2 - 1, -0.4) for x in range(10)]
+hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
 
-input_coors = [(x, y) for y in range(8) for x in range(8)]
-input_coors.append((0.0, -9))  # Bias
-
-
-hidden_coors = [
-    ((x / 5.0 - 1.0), -0.4) for x in range(10)
-]
-
-output_coors = [(x / 5.0 - 0.9, 0) for x in range(10)]  # 10 output classes
-
-
+# Output coords normalized over [-1, 1]
+output_coors = [(x / 9 * 2 - 1, 0.0) for x in range(10)]
+# Optionally add bias to output layer if needed
 
 substrate = FullSubstrate(
     input_coors=input_coors,
@@ -41,32 +33,28 @@ substrate = FullSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        weight_threshold=0.005,
+        weight_threshold=0.1,  # increase to prune weak links
         neat=NEAT(
-            pop_size=500,
-            species_size=20,
-            survival_threshold=0.01,
+            pop_size=300,          # smaller but still decent population
+            species_size=50,       # more balanced speciation
+            survival_threshold=0.2,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
-                num_inputs=4,  # size of query coors
+                num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
                 num_outputs=1,
-                # init_hidden_layers=(),
-                init_hidden_layers=(5,),  # add hidden layer
-                output_transform=ACT.tanh,            
+                init_hidden_layers=(),  # start simple, add layers via mutation
+                output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=ACT.sigmoid
+        output_transform=ACT.sigmoid,
     ),
     problem=problem,
-    generation_limit=100,
-    fitness_target=.8,
+    generation_limit=500,  # more generations for better results
+    fitness_target=0.9,   # set reasonable target to encourage progress
     seed=42,
 )
 
-# initialize state
 state = pipeline.setup()
-# run until terminate
 state, best = pipeline.auto_run(state)
-# show result
 pipeline.show(state, best)
