@@ -46,12 +46,12 @@ pipeline = Pipeline(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
                 init_hidden_layers=(),
-                output_transform=ACT.identity,
+                output_transform=ACT.tanh,
             ),
         ),
-        activation=ACT.identity,
+        activation=ACT.tanh,
         activate_time=10,
-        output_transform=jnn.softmax
+        output_transform=ACT.sigmoid
     ),
     problem=problem,
     generation_limit=100,
