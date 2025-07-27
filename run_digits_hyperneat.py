@@ -40,9 +40,9 @@ pipeline = Pipeline(
         substrate=substrate,
         weight_threshold=0.5,
         neat=NEAT(
-            pop_size=5000,
+            pop_size=500,
             species_size=20,
-            survival_threshold=0.2,
+            survival_threshold=0.1,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
@@ -58,7 +58,7 @@ pipeline = Pipeline(
         output_transform=ACT.sigmoid
     ),
     problem=problem,
-    generation_limit=100,
+    generation_limit=2000,
     fitness_target=.8,
     seed=42,
 )
