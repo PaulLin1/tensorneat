@@ -26,10 +26,9 @@ input_coors.append((0.0, -1.2))  # Bias
 
 hidden_coors = [
     ((x / 5.0 - 1.0), -0.4) for x in range(10)
-] + [
-    ((x / 5.0 - 1.0), 0.0) for x in range(10)
 ]
-output_coors = [(x / 5.0 - 0.9, 1.0) for x in range(10)]  # 10 output classes
+
+output_coors = [(x / 5.0 - 0.9, 0) for x in range(10)]  # 10 output classes
 
 
 
@@ -46,15 +45,13 @@ pipeline = Pipeline(
         neat=NEAT(
             pop_size=500,
             species_size=20,
-            survival_threshold=0.1,
+            survival_threshold=0.01,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
                 # init_hidden_layers=(),
                 init_hidden_layers=(5,),  # add hidden layer
-                # activation_set=['sigmoid', 'tanh', 'gauss', 'sin'], 
-
-                output_transform=jnn.softmax
+                output_transform=ACT.tanh,            
             ),
         ),
         activation=ACT.tanh,
