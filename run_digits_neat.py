@@ -19,7 +19,7 @@ problem = DigitsClassificationProblem()
 
 pipeline = Pipeline(
     algorithm=NEAT(
-        pop_size=100,
+        pop_size=500,
         species_size=20,
         survival_threshold=0.01,
         genome=DefaultGenome(
@@ -30,13 +30,13 @@ pipeline = Pipeline(
                 activation_options=[ACT.identity, ACT.inv],
                 aggregation_options=[AGG.sum, AGG.product],
             ),
-            max_nodes=1000,
-            max_conns=1000,
+            max_nodes=2000,
+            max_conns=5000,
             output_transform=ACT.identity,
         ),
     ),
     problem=problem,
-    generation_limit=100,
+    generation_limit=500,
     fitness_target=-1e-4,
     seed=42,
 )
