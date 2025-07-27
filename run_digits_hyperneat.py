@@ -20,9 +20,9 @@ problem = DigitsClassificationProblem()
 
 from tensorneat.algorithm.hyperneat import FullSubstrate
 
-# input coords: 8x8 grid normalized [0,1]
 input_coors = [(x / 3.5 - 1.0, y / 3.5 - 1.0) for y in range(8) for x in range(8)]  # 64
 input_coors.append((0.0, -1.2))  # Bias
+
 
 hidden_coors = [((x / 2.0 - 1.0), 0.0) for x in range(5)]  # 5 hidden
 output_coors = [(x / 5.0 - 0.9, 1.0) for x in range(10)]  # 10 output classes
@@ -38,6 +38,7 @@ substrate = FullSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
+        weight_threshold=0.5,
         neat=NEAT(
             pop_size=5000,
             species_size=20,
