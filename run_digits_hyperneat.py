@@ -52,9 +52,9 @@ pipeline = Pipeline(
                 num_outputs=1,
                 # init_hidden_layers=(),
                 init_hidden_layers=(5,),  # add hidden layer
-                # activation_set=['sigmoid', 'tanh', 'gauss', 'sin'], 
+                activation_set=['sigmoid', 'tanh', 'gauss', 'sin'], 
 
-                output_transform=ACT.tanh,
+                output_transform=jnn.softmax
             ),
         ),
         activation=ACT.tanh,
@@ -62,7 +62,7 @@ pipeline = Pipeline(
         output_transform=ACT.sigmoid
     ),
     problem=problem,
-    generation_limit=2000,
+    generation_limit=100,
     fitness_target=.8,
     seed=42,
 )
