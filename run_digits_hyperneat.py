@@ -39,7 +39,7 @@ pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
         neat=NEAT(
-            pop_size=750,
+            pop_size=500,
             species_size=20,
             survival_threshold=0.2,
             genome=DefaultGenome(
@@ -54,7 +54,7 @@ pipeline = Pipeline(
         output_transform=jnn.softmax
     ),
     problem=problem,
-    generation_limit=500,
+    generation_limit=100,
     fitness_target=.8,
     seed=42,
 )
