@@ -10,7 +10,7 @@ from tensorneat.genome import DefaultGenome
 from tensorneat.common import ACT, AGG
 from problems.digits_problem import DigitsClassificationProblem
 from tensorneat.genome import DefaultGenome, BiasNode
-
+import jax.nn as jnn
 problem = DigitsClassificationProblem()
 
 # Normalize input coordinates consistently over [-1,1]
@@ -53,7 +53,7 @@ pipeline = Pipeline(
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=ACT.softmax,
+        output_transform=jnn.softmax,
     ),
     problem=problem,
     generation_limit=1000,  # more generations for better results
