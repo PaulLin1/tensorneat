@@ -7,6 +7,7 @@ from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT
 
 import jax.numpy as jnp
+import jax.nn as jnn
 
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat import NEAT
@@ -54,7 +55,7 @@ pipeline = Pipeline(
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=jnp.argmax,
+        output_transform=jnn.softmax
     ),
     problem=problem,
     generation_limit=500,
