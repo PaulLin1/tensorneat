@@ -19,13 +19,6 @@ class DefaultConn(BaseConn):
         weight_replace_rate: float = 0.015,
         weight_lower_bound: float = -5.0,
         weight_upper_bound: float = 5.0,
-        # weight_init_mean = 0.0,
-        # weight_init_std = 1,
-        # weight_mutate_power = .5,
-        # weight_mutate_rate = 0.4,
-        # weight_replace_rate = 0.03,
-        # weight_lower_bound = -5.,
-        # weight_upper_bound = 5.0,
     ):
         super().__init__()
         self.weight_init_mean = weight_init_mean

@@ -1,8 +1,6 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT  # <- add this
 
@@ -26,10 +24,10 @@ pipeline = Pipeline(
             num_inputs=64,
             num_outputs=10,
             init_hidden_layers=(),
-            node_gene=BiasNode(
-                activation_options=[ACT.identity, ACT.inv],
-                aggregation_options=[AGG.sum, AGG.product],
-            ),
+            # node_gene=BiasNode(
+            #     activation_options=[ACT.identity, ACT.inv],
+            #     aggregation_options=[AGG.sum, AGG.product],
+            # ),
             max_nodes=2000,
             max_conns=5000,
             output_transform=ACT.identity,
