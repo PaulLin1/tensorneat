@@ -36,7 +36,7 @@ pipeline = Pipeline(
         substrate=substrate,
         weight_threshold=5,  # increase to prune weak links
         neat=NEAT(
-            pop_size=2000,          # smaller but still decent population
+            pop_size=500,          # smaller but still decent population
             species_size=20,       # more balanced speciation
             survival_threshold=0.01,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
@@ -56,7 +56,7 @@ pipeline = Pipeline(
         output_transform=jnn.softmax,
     ),
     problem=problem,
-    generation_limit=1000,  # more generations for better results
+    generation_limit=100,  # more generations for better results
     fitness_target=0.9,   # set reasonable target to encourage progress
     seed=42,
 )
