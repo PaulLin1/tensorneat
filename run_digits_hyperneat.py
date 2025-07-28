@@ -42,13 +42,7 @@ pipeline = Pipeline(
             survival_threshold=0.01,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
-                num_outputs=1,
-                node_gene=BiasNode(
-                    activation_options=[
-                        ACT.tanh, ACT.sin, ACT.gauss, ACT.identity
-                    ],
-                    aggregation_options=[AGG.sum]
-                ),
+                num_outputs=3,
                 max_nodes=100,
                 max_conns=300,
                 init_hidden_layers=(5,),  # start simple, add layers via mutation
