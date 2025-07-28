@@ -26,6 +26,9 @@ hidden_coors = [
 output_coors = [(x / 9 * 2 - 1, 0.0) for x in range(10)]
 # Optionally add bias to output layer if needed
 
+hidden_coors.append((0.0, -1.2))
+output_coors.append((0.0, 0.2))
+
 substrate = FullSubstrate(
     input_coors=input_coors,
     hidden_coors=hidden_coors,
@@ -42,10 +45,14 @@ pipeline = Pipeline(
             survival_threshold=0.01,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
-                num_outputs=3,
+                num_outputs=1,
+                node_gene=BiasNode(
+                    activation_options=[ACT.tanh, ACT.sin, ACT.gauss, ACT.identity],
+                    aggregation_options=[AGG.sum]
+                ),
                 max_nodes=100,
                 max_conns=300,
-                init_hidden_layers=(5,),  # start simple, add layers via mutation
+                init_hidden_layers=(),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
