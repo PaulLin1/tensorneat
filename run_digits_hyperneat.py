@@ -52,7 +52,7 @@ pipeline = Pipeline(
                 ),
                 max_nodes=100,
                 max_conns=300,
-                init_hidden_layers=(),  # start simple, add layers via mutation
+                init_hidden_layers=(5,),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
