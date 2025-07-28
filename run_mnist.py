@@ -17,7 +17,7 @@ problem = MNISTClassificationProblem()
 
 pipeline = Pipeline(
     algorithm=NEAT(
-        pop_size=500,
+        pop_size=100,
         species_size=20,
         survival_threshold=0.01,
         genome=DefaultGenome(
