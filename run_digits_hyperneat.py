@@ -1,8 +1,6 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
-
 from tensorneat.pipeline import Pipeline
 from tensorneat.algorithm.neat.neat import NEAT
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
@@ -18,7 +16,10 @@ input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8
 input_coors.append((0.0, -1.2))  # Bias for input layer
 
 # Hidden coords normalized over [-1, 1], same scale as input
-hidden_coors = [(x / 9 * 2 - 1, -0.4) for x in range(10)]
+hidden_coors = [
+    (x / 20 * 2 - 1, -0.4)
+    for x in range(20)
+]
 # hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
 
 # Output coords normalized over [-1, 1]
@@ -34,29 +35,32 @@ substrate = FullSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        weight_threshold=5,  # increase to prune weak links
+        weight_threshold=.2,  # increase to prune weak links
         neat=NEAT(
             pop_size=500,          # smaller but still decent population
-            species_size=20,       # more balanced speciation
+            species_size=30,       # more balanced speciation
             survival_threshold=0.01,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
                 num_outputs=1,
                 node_gene=BiasNode(
-                    activation_options=[ACT.identity, ACT.inv],
-                    aggregation_options=[AGG.sum, AGG.product],
-                ),
-
+                    activation_options=[
+                        ACT.tanh, ACT.sin, ACT.gauss, ACT.identity
+                    ],
+                    aggregation_options=[AGG.sum]
+                )
+                max_nodes=100,
+                max_conns=300,
                 init_hidden_layers=(5,),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
-        activate_time=10,
+        activate_time=15,
         output_transform=jnn.softmax,
     ),
     problem=problem,
-    generation_limit=100,  # more generations for better results
+    generation_limit=2000,
     fitness_target=0.9,   # set reasonable target to encourage progress
     seed=42,
 )
