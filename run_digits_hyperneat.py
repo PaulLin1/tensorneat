@@ -48,7 +48,7 @@ pipeline = Pipeline(
                         ACT.tanh, ACT.sin, ACT.gauss, ACT.identity
                     ],
                     aggregation_options=[AGG.sum]
-                )
+                ),
                 max_nodes=100,
                 max_conns=300,
                 init_hidden_layers=(5,),  # start simple, add layers via mutation
