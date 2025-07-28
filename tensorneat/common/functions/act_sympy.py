@@ -22,6 +22,14 @@ class SympyTanh(sp.Function):
         return sp.tanh(z)
 
 
+import sympy as sp
+
+class SympyGauss(sp.Function):
+    @classmethod
+    def eval(cls, z):
+        return sp.exp(-z**2)
+
+
 class SympyScaledTanh(sp.Function):
     @classmethod
     def eval(cls, z):
