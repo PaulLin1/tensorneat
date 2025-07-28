@@ -16,7 +16,7 @@ input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8
 input_coors.append((0.0, -1.2))  # Bias for input layer
 
 # Hidden coords normalized over [-1, 1], same scale as input
-hidden_coors = [(x / 19 * 2 - 1, y / 4 * 2 - 1) for y in range(5) for x in range(20//5)]
+hidden_coors = [(x / 9 * 2 - 1, y / 9 * 2 - 1) for y in range(10) for x in range(10)]
 # hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
 
 # Output coords normalized over [-1, 1]
@@ -34,19 +34,19 @@ pipeline = Pipeline(
         substrate=substrate,
         weight_threshold=.0,  # increase to prune weak links
         neat=NEAT(
-            pop_size=1000,          # smaller but still decent population
+            pop_size=2000,          # smaller but still decent population
             species_size=30,       # more balanced speciation
-            survival_threshold=0.2,  # keep top 20% survive to maintain diversity
+            survival_threshold=0.5,  # keep top 20% survive to maintain diversity
             genome=DefaultGenome(
                 num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
                 num_outputs=1,
                 node_gene=BiasNode(
-                    activation_options=[ACT.tanh, ACT.sin, ACT.scaled_sigmoid, ACT.gauss, ACT.identity],
+                    activation_options=[ACT.tanh, ACT.sin, ACT.sigmoid, ACT.gauss, ACT.identity],
                     aggregation_options=[AGG.sum]
                 ),
                 max_nodes=100,
                 max_conns=300,
-                init_hidden_layers=(5,),  # start simple, add layers via mutation
+                init_hidden_layers=(20,),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
@@ -55,8 +55,8 @@ pipeline = Pipeline(
         output_transform=jnn.softmax,
     ),
     problem=problem,
-    generation_limit=200,
-    fitness_target=0.9,   # set reasonable target to encourage progress
+    generation_limit=2000,
+    fitness_target=0.8,   # set reasonable target to encourage progress
     seed=42,
 )
 
