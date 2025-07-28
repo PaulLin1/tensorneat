@@ -34,7 +34,7 @@ substrate = FullSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        weight_threshold=0.1,  # increase to prune weak links
+        weight_threshold=5,  # increase to prune weak links
         neat=NEAT(
             pop_size=2000,          # smaller but still decent population
             species_size=20,       # more balanced speciation
@@ -47,7 +47,7 @@ pipeline = Pipeline(
                     aggregation_options=[AGG.sum, AGG.product],
                 ),
 
-                init_hidden_layers=(),  # start simple, add layers via mutation
+                init_hidden_layers=(5,),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
