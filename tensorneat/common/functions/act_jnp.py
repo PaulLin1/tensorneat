@@ -55,3 +55,6 @@ def exp_(z):
 
 def abs_(z):
     return jnp.abs(z)
+
+def gauss(x):
+    return jnp.exp(-x**2)
