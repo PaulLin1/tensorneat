@@ -32,26 +32,6 @@ substrate = FullSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        neat=NEAT(
-            pop_size=100,
-            species_size=20,
-            survival_threshold=0.2,
-            genome=DefaultGenome(
-                num_inputs=4,  # size of query coors
-                num_outputs=1,
-                node_gene=BiasNode(
-                    activation_options=[ACT.tanh, ACT.sin, ACT.sigmoid, ACT.gauss, ACT.identity],
-                    aggregation_options=[AGG.sum]
-                ),
-                init_hidden_layers=(8,),
-                max_nodes=300,
-                max_conns=1000,
-                output_transform=ACT.identity
-            ),
-        ),
-        activation=ACT.tanh,
-        activate_time=10,
-        output_transform=ACT.sigmoid,
     ),
     problem=problem,
     generation_limit=300,
