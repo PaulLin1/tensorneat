@@ -21,11 +21,12 @@ substrate = MLPSubstrate(
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
+        weight_threshold = 0.05,
+
         neat=NEAT(
             pop_size=100,
             species_size=20,
             survival_threshold=0.4,
-            weight_threshold = 0.05,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
