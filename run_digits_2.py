@@ -16,7 +16,7 @@ problem = DigitsClassificationProblem()
 
 substrate = MLPSubstrate(
     layers=[65, 100, 50, 10],       # Input: 784 pixels; two hidden layers; output: 10 digits
-    coor_range=(-5.0, 5.0, -5.0, 5.0)
+    coor_range=(-1.0, 1.0, -1.0, 1.0)
 )
 pipeline = Pipeline(
     algorithm=HyperNEAT(
@@ -24,7 +24,8 @@ pipeline = Pipeline(
         neat=NEAT(
             pop_size=100,
             species_size=20,
-            survival_threshold=0.01,
+            survival_threshold=0.4,
+            weight_threshold = 0.05,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
