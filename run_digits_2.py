@@ -13,10 +13,13 @@ problem = DigitsClassificationProblem()
 #     for x in range(8)
 # ]
 
-input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8)]
-input_coors = [(x/64, -1) for x in range(64)]
+input_coors = [
+    (x / 3.5 - 1.0, y / 3.5 - 1.0)
+    for y in range(8)
+    for x in range(8)
+]
+input_coors.append((0.0, -1.2))  # bias node
 
-input_coors.append((0.0, -1.2))
 hidden_coors = [(x / 9 * 2 - 1, y / 9 * 2 - 1) for y in range(10) for x in range(10)]
 
 output_coors = [(x / 9 * 2 - 1, 1) for x in range(10)]
@@ -32,7 +35,7 @@ pipeline = Pipeline(
         neat=NEAT(
             pop_size=100,
             species_size=20,
-            survival_threshold=0.01,
+            survival_threshold=0.2,
             genome=DefaultGenome(
                 num_inputs=4,  # size of query coors
                 num_outputs=1,
@@ -40,10 +43,10 @@ pipeline = Pipeline(
                     activation_options=[ACT.tanh, ACT.sin, ACT.sigmoid, ACT.gauss, ACT.identity],
                     aggregation_options=[AGG.sum]
                 ),
-                init_hidden_layers=(),
-                max_nodes=100,
-                max_conns=300,
-                output_transform=ACT.tanh,
+                init_hidden_layers=(8,),
+                max_nodes=300,
+                max_conns=1000,
+                output_transform=ACT.identity
             ),
         ),
         activation=ACT.tanh,
