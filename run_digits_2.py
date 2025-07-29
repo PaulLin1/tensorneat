@@ -33,6 +33,9 @@ pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
     ),
+    neat=NEAT(
+        
+    )
     problem=problem,
     generation_limit=300,
     fitness_target=1,
