@@ -5,7 +5,7 @@ from tensorneat.genome import DefaultGenome
 from tensorneat.common import ACT, AGG
 from problems.digits_problem import DigitsClassificationProblem
 from tensorneat.genome import DefaultGenome, BiasNode
-
+import jax.nn as jnn
 problem = DigitsClassificationProblem()
 # input_coors = [
 #     (x / 3.5 - 1.0, y / 3.5 - 1.0)
@@ -15,7 +15,7 @@ problem = DigitsClassificationProblem()
 
 
 substrate = MLPSubstrate(
-    layers=[65, 100, 50, 10],       # Input: 784 pixels; two hidden layers; output: 10 digits
+    layers=[65, 100, 100, 50, 10],       # Input: 784 pixels; two hidden layers; output: 10 digits
     coor_range=(-1.0, 1.0, -1.0, 1.0)
 )
 pipeline = Pipeline(
@@ -42,10 +42,10 @@ pipeline = Pipeline(
         ),
         activation=ACT.tanh,
         activate_time=10,
-        output_transform=ACT.sigmoid,
+        output_transform=jnn.softmax
     ),
     problem=problem,
-    generation_limit=300,
+    generation_limit=10000,
     fitness_target=1,
 )
 
