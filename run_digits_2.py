@@ -1,63 +1,58 @@
-import sys
-import os
-
 from tensorneat.pipeline import Pipeline
-from tensorneat.algorithm.neat.neat import NEAT
+from tensorneat.algorithm.neat import NEAT
 from tensorneat.algorithm.hyperneat import HyperNEAT, FullSubstrate
 from tensorneat.genome import DefaultGenome
 from tensorneat.common import ACT, AGG
 from problems.digits_problem import DigitsClassificationProblem
 from tensorneat.genome import DefaultGenome, BiasNode
-import jax.nn as jnn
+
 problem = DigitsClassificationProblem()
+# input_coors = [
+#     (x / 3.5 - 1.0, y / 3.5 - 1.0)
+#     for y in range(8)
+#     for x in range(8)
+# ]
 
-# Normalize input coordinates consistently over [-1,1]
 input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8)]
-input_coors.append((0.0, -1.2))  # Bias for input layer
+input_coors = [(x/64, -1) for x in range(64)]
 
-# Hidden coords normalized over [-1, 1], same scale as input
+input_coors.append((0.0, -1.2))
 hidden_coors = [(x / 9 * 2 - 1, y / 9 * 2 - 1) for y in range(10) for x in range(10)]
-# hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
 
-# Output coords normalized over [-1, 1]
-output_coors = [(x / 9 * 2 - 1, 0.0) for x in range(10)]
-# Optionally add bias to output layer if needed
+output_coors = [(x / 9 * 2 - 1, 1) for x in range(10)]
 
 substrate = FullSubstrate(
     input_coors=input_coors,
     hidden_coors=hidden_coors,
-    output_coors=output_coors,
+    output_coors=output_coors
 )
-
 pipeline = Pipeline(
     algorithm=HyperNEAT(
         substrate=substrate,
-        weight_threshold=.0,  # increase to prune weak links
         neat=NEAT(
-            pop_size=2000,          # smaller but still decent population
-            species_size=30,       # more balanced speciation
-            survival_threshold=0.5,  # keep top 20% survive to maintain diversity
+            pop_size=100,
+            species_size=20,
+            survival_threshold=0.01,
             genome=DefaultGenome(
-                num_inputs=4,      # CPPN inputs: (x1, y1, x2, y2)
+                num_inputs=4,  # size of query coors
                 num_outputs=1,
                 node_gene=BiasNode(
                     activation_options=[ACT.tanh, ACT.sin, ACT.sigmoid, ACT.gauss, ACT.identity],
                     aggregation_options=[AGG.sum]
                 ),
+                init_hidden_layers=(),
                 max_nodes=100,
                 max_conns=300,
-                # init_hidden_layers=(20,),  # start simple, add layers via mutation
                 output_transform=ACT.tanh,
             ),
         ),
         activation=ACT.tanh,
-        activate_time=50,
-        output_transform=jnn.softmax,
+        activate_time=10,
+        output_transform=ACT.sigmoid,
     ),
     problem=problem,
-    generation_limit=2000,
-    fitness_target=0.8,   # set reasonable target to encourage progress
-    seed=42,
+    generation_limit=300,
+    fitness_target=1,
 )
 
 state = pipeline.setup()
