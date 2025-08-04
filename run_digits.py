@@ -24,10 +24,10 @@ pipeline = Pipeline(
             num_inputs=64,
             num_outputs=10,
             init_hidden_layers=(),
-            # node_gene=BiasNode(
-            #     activation_options=[ACT.identity, ACT.inv],
-            #     aggregation_options=[AGG.sum, AGG.product],
-            # ),
+            node_gene=BiasNode(
+                activation_options=[ACT.tanh, ACT.sin, ACT.gauss, ACT.identity],
+                aggregation_options=[AGG.sum, AGG.product],
+            ),
             max_nodes=2000,
             max_conns=5000,
             output_transform=ACT.identity,

@@ -11,10 +11,6 @@ from tensorneat.genome import DefaultGenome, BiasNode
 import jax.nn as jnn
 problem = DigitsClassificationProblem()
 
-# Normalize input coordinates consistently over [-1,1]
-input_coors = [(x / 7 * 2 - 1, y / 7 * 2 - 1) for y in range(8) for x in range(8)]
-input_coors.append((0.0, -1.2))  # Bias for input layer
-
 # Hidden coords normalized over [-1, 1], same scale as input
 hidden_coors = [(x / 9 * 2 - 1, y / 9 * 2 - 1) for y in range(10) for x in range(10)]
 # hidden_coors.append((0.0, -1.2))  # Add bias for hidden layer if desired
@@ -22,6 +18,17 @@ hidden_coors = [(x / 9 * 2 - 1, y / 9 * 2 - 1) for y in range(10) for x in range
 # Output coords normalized over [-1, 1]
 output_coors = [(x / 9 * 2 - 1, 0.0) for x in range(10)]
 # Optionally add bias to output layer if needed
+
+input_coors = [
+    (x / 4.0 - 1.0, y / 4.0 - 1.0)
+    for y in range(8)
+    for x in range(8)
+]
+input_coors.append((0.0, -1.2))  # Bias for input layer
+
+output_coords = [
+    (i / 5.0 - 1.0, 0.0) for i in range(10)
+]
 
 substrate = FullSubstrate(
     input_coors=input_coors,
