@@ -73,10 +73,10 @@ pipeline = Pipeline(
         substrate=substrate,
         weight_threshold=.1,
         neat=NEAT(
-            pop_size=500,
+            pop_size=400,
             species_size=30,
             survival_threshold=0.2,
-            compatibility_threshold=5,
+            compatibility_threshold=2,
             genome=DefaultGenome(
                 num_inputs=4,
                 num_outputs=1,
@@ -86,7 +86,6 @@ pipeline = Pipeline(
                 ),
                 max_nodes=100,
                 max_conns=500,
-                init_hidden_layers=(5,),
                 output_transform=ACT.tanh,
             ),
         ),
@@ -98,8 +97,10 @@ pipeline = Pipeline(
     generation_limit=2000,
     fitness_target=0.8,
     seed=42,
+    is_save=True, save_dir='models/'
 )
 
 state = pipeline.setup()
 state, best = pipeline.auto_run(state)
 pipeline.show(state, best)
+

@@ -7,30 +7,27 @@ from tensorneat.common import ACT, AGG
 from problems.mnist_problem import MNISTClassificationProblem  # ← your custom problem file
 import jax.numpy as jnp
 # Use MNIST instead of Digits
+
+
 problem = MNISTClassificationProblem()
 algorithm=NEAT(
-    pop_size=50,
-    species_size=30,
+    pop_size=500,
+    species_size=75,
     survival_threshold=0.2,
+    compatibility_threshold=.905,
     genome=DefaultGenome(
         num_inputs=784,  # ← MNIST input (28x28)
         num_outputs=10,
-        # init_hidden_layers=(),
-        # node_gene = BiasNode(
-        #     activation_options=[ACT.relu],  # only identity activation
-        #     aggregation_options=[AGG.sum],       # only sum aggregation
-        # ),
-        max_nodes=2000,
-        max_conns=10000,
-        output_transform=ACT.relu,
+        max_nodes=900,
+        max_conns=20000,
     ),
 )
 
 pipeline = Pipeline(
     algorithm=algorithm,
     problem=problem,
-    generation_limit=100,
-    fitness_target=.6,
+    generation_limit=500,
+    fitness_target=1,
     seed=42,
     is_save=True, save_dir='models/'
 )
@@ -41,4 +38,5 @@ state = pipeline.setup()
 state, best = pipeline.auto_run(state)
 # show result
 pipeline.show(state, best)
+
 
